@@ -10,10 +10,10 @@ except ImportError:
 setup(
     name = 'bottle-mongo',
     version = '0.2.2',
-    url = 'http://github.com/bottlepy/bottle-extras/',
+    url = 'https://github.com/bottlepy/bottle-mongo',
     description = 'MongoDB integration for Bottle',
-    author = 'Florian Douetteau',
-    author_email = 'florian@douetteau.net',
+    author = 'Thiago Avelino',
+    author_email = 'thiago@avelino.xxx',
     license = 'MIT',
     platforms = 'any',
     py_modules = [
