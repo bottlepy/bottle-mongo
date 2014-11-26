@@ -1,6 +1,9 @@
 Bottle MongoDB
 ==============
 
+.. image:: https://travis-ci.org/bottlepy/bottle-mongo.svg?branch=master
+    :target: https://travis-ci.org/bottlepy/bottle-mongo
+
 This bottle-mongodb plugin integrates MongoDB with your Bottle
 application. It injects a MongoDB session in your route and handle the
 session cycle.
