@@ -1,15 +1,12 @@
 #!/usr/bin/env python
-
 from setuptools import setup
 
-try:
-    from distutils.command.build_py import build_py_2to3 as build_py
-except ImportError:
-    from distutils.command.build_py import build_py
+
+REQUIREMENTS = [i.strip() for i in open("requirements.txt").readlines()]
 
 setup(
     name = 'bottle-mongo',
-    version = '0.2.2',
+    version = '0.2.3',
     url = 'https://github.com/bottlepy/bottle-mongo',
     description = 'MongoDB integration for Bottle',
     author = 'Thiago Avelino',
@@ -19,10 +16,7 @@ setup(
     py_modules = [
         'bottle_mongo'
     ],
-    requires = [
-        'bottle (>=0.9)',
-        'pymongo'
-    ],
+    install_requires = REQUIREMENTS,
     classifiers = [
         'Environment :: Web Environment',
         'Environment :: Plugins',
@@ -34,5 +28,4 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
-    cmdclass = {'build_py': build_py}
 )
