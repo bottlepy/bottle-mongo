@@ -6,7 +6,7 @@ REQUIREMENTS = [i.strip() for i in open("requirements.txt").readlines()]
 
 setup(
     name = 'bottle-mongo',
-    version = '0.2.3',
+    version = '0.2.4',
     url = 'https://github.com/bottlepy/bottle-mongo',
     description = 'MongoDB integration for Bottle',
     author = 'Thiago Avelino',
