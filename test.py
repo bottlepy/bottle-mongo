@@ -40,7 +40,10 @@ class RedisTest(unittest.TestCase):
             insert = {"lang": "python", "framework": "bottle"}
             collection = mongodb['bottle'].insert(insert)
 
-            connection = pymongo.Connection()
+            try:
+                connection = pymongo.MongoClient()
+            except AttributeError:
+                connection = pymongo.Connection()
             db = connection.bottle
             get = db.bottle.find_one({})
 
