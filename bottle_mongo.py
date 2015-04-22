@@ -22,12 +22,18 @@ import inspect
 
 from bottle import PluginError, response, JSONPlugin
 
-try:
-    from pymongo import MongoClient, MongoReplicaSetClient
-except ImportError:
-    # Backward compatibility with PyMongo 2.2
-    from pymongo import Connection as MongoClient
-    MongoReplicaSetClient = None
+import pymongo
+if pymongo.version_tuple[0] >= 3:
+    from pymongo import MongoClient
+    MongoReplicaSetClient = MongoClient
+else:
+    try:
+        # Backward compatibility with PyMongo 2.3 to 2.8
+        from pymongo import MongoClient, MongoReplicaSetClient
+    except ImportError:
+        # Backward compatibility with PyMongo 2.2
+        from pymongo import Connection as MongoClient
+        MongoReplicaSetClient = None
 
 from pymongo.uri_parser import parse_uri
 import bson.json_util
