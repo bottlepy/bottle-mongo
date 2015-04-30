@@ -45,5 +45,23 @@ python:
   - "3.2"
   - "3.3"
   - "3.4"
+env:
+  - PYMONGO_VERSION=2.1
+  - PYMONGO_VERSION=2.2
+  - PYMONGO_VERSION=2.3
+  - PYMONGO_VERSION=2.4
+  - PYMONGO_VERSION=2.5
+  - PYMONGO_VERSION=2.6
+  - PYMONGO_VERSION=2.7
+  - PYMONGO_VERSION=2.8
+  - PYMONGO_VERSION=3.0
+matrix:
+  exclude:
+    - python: "3.2"
+      env: PYMONGO_VERSION=2.1
+    - python: "3.3"
+      env: PYMONGO_VERSION=2.1
+    - python: "3.4"
+      env: PYMONGO_VERSION=2.1
 install: "python setup.py install"
 script: "python test.py"

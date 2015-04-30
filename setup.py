@@ -1,8 +1,14 @@
 #!/usr/bin/env python
+import os
 from setuptools import setup
 
 
 REQUIREMENTS = [i.strip() for i in open("requirements.txt").readlines()]
+
+pymongo_version = os.environ.get('PYMONGO_VERSION')
+if pymongo_version:
+    REQUIREMENTS.remove('pymongo')
+    REQUIREMENTS.append('pymongo==%s' % pymongo_version)
 
 setup(
     name = 'bottle-mongo',
