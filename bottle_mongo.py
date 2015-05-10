@@ -80,7 +80,8 @@ class MongoPlugin(object):
             return self.mongo_db
 
         if len(self.uri_params['nodelist']) > 1 and MongoReplicaSetClient:
-            client = MongoReplicaSetClient(self.uri_params['nodelist'],
+            nodes = ','.join(['%s:%d' % n for n in self.uri_params['nodelist']])
+            client = MongoReplicaSetClient(nodes,
                                            **self.uri_params['options'])
         else:
             client = MongoClient(self.uri_params['nodelist'][0][0],

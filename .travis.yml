@@ -1,11 +1,67 @@
 language: python
-services:
-  - mongodb
+before_script:
+  # Set up a shared authentication key
+  - openssl rand -base64 741 | sudo tee /etc/mongodb.authkey
+  - sudo chown mongodb  /etc/mongodb.authkey
+  - sudo chmod 600 /etc/mongodb.authkey
+
+  # Begin modification of the default mongoDB instance
+  - echo "replSet = testReplSet" | sudo tee -a /etc/mongodb.conf
+  - echo "oplogSize = 250" | sudo tee -a /etc/mongodb.conf
+  - echo "nojournal = true" | sudo tee -a /etc/mongodb.conf
+  - echo "keyFile = /etc/mongodb.authkey" | sudo tee -a /etc/mongodb.conf
+
+  # Wipe out the data directory so we are clean with our configuration
+  - sudo rm -rf /var/lib/mongodb/*
+
+  # Start up the service using the normal init script
+  - sudo cat /etc/mongodb.conf
+  - sudo service mongodb start || { cat /var/log/mongodb/mongodb.log; exit 1; }
+
+  # Just wait until we are sure it is up
+  - bash -c "while true; do mongo --quiet --port 27017 --eval 'if (!db.stats().ok) { quit(1) }' || { sleep 2; continue; } && break; done;"
+
+  - sudo cp /etc/mongodb.conf /etc/mongodb2.conf
+  - echo "logpath = /tmp/mongodb.log" | sudo tee -a /etc/mongodb.conf
+  - echo "port = 27018" | sudo tee -a /etc/mongodb2.conf
+  - sudo sed -i 's,/var/lib/mongodb,/var/lib/mongodb2,' /etc/mongodb2.conf
+
+  # Create the data directory for the secondary
+  - sudo mkdir /var/lib/mongodb2
+  - sudo chown mongodb /var/lib/mongodb2
+
+  # Start the secondary instance using the plain mongod command
+  - sudo cat /etc/mongodb2.conf
+  - sudo -u mongodb mongod --fork --config /etc/mongodb2.conf --logpath /tmp/mongodb2.log || { cat /tmp/mongodb2.log; exit 1; }
+
+  # Wait for the secondary to start up
+  - bash -c "while true; do mongo --quiet --port 27018 --eval 'if (!db.stats().ok) { quit(1) }' || { sleep 2; continue; } && break; done;"
+
+  # Create the replicaSet and then wait for it to become clean with a primary and secondary
+  - mongo --quiet --port 27017 .travis/rs_create.js || { cat /var/log/mongodb/mongodb.log; cat /tmp/mongodb2.log; exit 1; }
 python:
   - "2.6"
   - "2.7"
   - "3.2"
   - "3.3"
   - "3.4"
+env:
+  - PYMONGO_VERSION=2.1
+  - PYMONGO_VERSION=2.2
+  - PYMONGO_VERSION=2.3
+  - PYMONGO_VERSION=2.4
+  - PYMONGO_VERSION=2.5
+  - PYMONGO_VERSION=2.6
+  - PYMONGO_VERSION=2.7
+  - PYMONGO_VERSION=2.8
+  - PYMONGO_VERSION=3.0
+matrix:
+  exclude:
+    - python: "3.2"
+      env: PYMONGO_VERSION=2.1
+    - python: "3.3"
+      env: PYMONGO_VERSION=2.1
+    - python: "3.4"
+      env: PYMONGO_VERSION=2.1
 install: "python setup.py install"
 script: "python test.py"

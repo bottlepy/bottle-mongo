@@ -50,6 +50,16 @@ class RedisTest(unittest.TestCase):
             self.assertTrue(get)
             self.assertEqual(get, mongodb['bottle'].find_one())
         self.app({'PATH_INFO':'/', 'REQUEST_METHOD':'GET'}, lambda x,y: None)
+
+
+class ReplicaSetTest(RedisTest):
+
+    def setUp(self):
+        self.app = bottle.Bottle(catchall=False)
+        read_pref = pymongo.ReadPreference.SECONDARY
+        plugin = MongoPlugin(uri="mongodb://127.0.0.1:27017,127.0.0.1:27018/?replicaSet=testReplSet",
+                             db="bottle", json_mongo=True, read_preference=read_pref, w=2)
+        self.plugin = self.app.install(plugin)
  
 
 if __name__ == '__main__':
