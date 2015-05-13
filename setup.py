@@ -12,7 +12,7 @@ if pymongo_version:
 
 setup(
     name = 'bottle-mongo',
-    version = '0.2.4',
+    version = '0.3.0',
     url = 'https://github.com/bottlepy/bottle-mongo',
     description = 'MongoDB integration for Bottle',
     author = 'Thiago Avelino',

@@ -8,6 +8,8 @@ This bottle-mongodb plugin integrates MongoDB with your Bottle
 application. It injects a MongoDB session in your route and handle the
 session cycle.
 
+Support pymongo 3 and 2
+
 
 Usage Example:
 
