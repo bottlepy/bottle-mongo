@@ -157,7 +157,7 @@ class MongoPlugin(object):
 
     def apply(self, callback, context):
         """Return a decorated route callback."""
-        args = inspect.getargspec(context.callback)[0]
+        args = inspect.getfullargspec(context.callback)[0]
         # Skip this callback if we don't need to do anything
         if self.keyword not in args:
             return callback
